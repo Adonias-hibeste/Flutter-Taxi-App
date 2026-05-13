@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'ride_selection_page.dart';
 
 class TaxiHomePage extends StatelessWidget {
   const TaxiHomePage({super.key});
@@ -7,150 +9,173 @@ class TaxiHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Map Placeholder (Simulated)
-          Container(
-            color: const Color(0xFFF3F3F3),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(LucideIcons.map, size: 100, color: Colors.grey.withOpacity(0.2)),
-                  const SizedBox(height: 10),
-                  const Text('Map View Integration', style: TextStyle(color: Colors.grey)),
-                ],
-              ),
-            ),
-          ),
-
-          // Custom App Bar / Menu
-          Positioned(
-            top: 60,
-            left: 20,
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 25,
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(LucideIcons.menu, color: Colors.black),
-              ),
-            ),
-          ),
-
-          // Search Bar
-          Positioned(
-            top: 130,
-            left: 20,
-            right: 20,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: const TextField(
-                decoration: InputDecoration(
-                  hintText: 'Where to?',
-                  border: InputBorder.none,
-                  icon: Icon(LucideIcons.search, color: Color(0xFFF7C325)),
-                ),
-              ),
-            ),
-          ),
-
-          // Bottom Sheet
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 20,
-                    spreadRadius: 5,
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Select Ride',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  
-                  _buildRideOption('Basic', '4 min', '\$12.50', LucideIcons.car, true),
-                  _buildRideOption('Comfort', '2 min', '\$18.00', LucideIcons.shieldCheck, false),
-                  _buildRideOption('XL', '6 min', '\$25.00', LucideIcons.users, false),
-
-                  const SizedBox(height: 24),
-                  
-                  SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1A1A1A),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                      ),
-                      child: const Text(
-                        'CONFIRM RIDE',
-                        style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // Simulated Map Background
+          _buildMapBackground(),
+          
+          // Header
+          _buildHeader(),
+          
+          // Bottom Search Card
+          _buildSearchCard(context),
+          
+          // Floating Action Buttons
+          _buildFloatingButtons(),
         ],
       ),
     );
   }
 
-  Widget _buildRideOption(String name, String time, String price, IconData icon, bool selected) {
+  Widget _buildMapBackground() {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: selected ? const Color(0xFFF7C325).withOpacity(0.1) : Colors.transparent,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: selected ? const Color(0xFFF7C325) : Colors.grey.withOpacity(0.1),
+        color: const Color(0xFF1A1A1A),
+        image: DecorationImage(
+          image: const NetworkImage('https://images.unsplash.com/photo-1526649661456-89c7ed4d00fb'),
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.6), BlendMode.darken),
         ),
       ),
+      child: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // User Location
+            Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(color: Colors.yellow, shape: BoxShape.circle, border: Border.all(color: Colors.black, width: 3)),
+            ),
+            // Simulated Cars
+            _buildCarMarker(const Offset(100, 200)),
+            _buildCarMarker(const Offset(-120, -150)),
+            _buildCarMarker(const Offset(50, -250)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCarMarker(Offset offset) {
+    return Transform.translate(
+      offset: offset,
+      child: const Icon(LucideIcons.car, color: Colors.yellow, size: 32),
+    );
+  }
+
+  Widget _buildHeader() {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
+              child: const Icon(LucideIcons.menu, color: Colors.yellow),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(20)),
+              child: Row(
+                children: const [
+                  CircleAvatar(radius: 4, backgroundColor: Colors.yellow),
+                  SizedBox(width: 8),
+                  Text('Online', style: TextStyle(color: Colors.yellow, fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchCard(BuildContext context) {
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: const BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(32), topRight: Radius.circular(32)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Where to?', style: TextStyle(color: Colors.yellow, fontSize: 24, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 24),
+            GestureDetector(
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const RideSelectionPage())),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(color: const Color(0xFF1A1A1A), borderRadius: BorderRadius.circular(16)),
+                child: Row(
+                  children: const [
+                    Icon(LucideIcons.search, color: Colors.yellow),
+                    SizedBox(width: 16),
+                    Text('Search destination...', style: TextStyle(color: Colors.white54)),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            const Text('Recent Places', style: TextStyle(color: Colors.white38, fontSize: 12, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+            _buildRecentPlace('Elite Store', 'High-end District • 2.4 km'),
+            _buildRecentPlace('Urban Office', 'Downtown Hub • 5.1 km'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecentPlace(String title, String sub) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
       child: Row(
         children: [
-          Icon(icon, color: selected ? const Color(0xFF1A1A1A) : Colors.grey),
-          const SizedBox(width: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text(time, style: const TextStyle(color: Colors.grey, fontSize: 12)),
-            ],
+          const Icon(LucideIcons.mapPin, color: Colors.white24, size: 20),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                Text(sub, style: const TextStyle(color: Colors.white38, fontSize: 12)),
+              ],
+            ),
           ),
-          const Spacer(),
-          Text(price, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const Icon(LucideIcons.chevronRight, color: Colors.white24, size: 16),
         ],
       ),
+    );
+  }
+
+  Widget _buildFloatingButtons() {
+    return Positioned(
+      right: 16,
+      bottom: 300,
+      child: Column(
+        children: [
+          _buildFab(LucideIcons.navigation2),
+          const SizedBox(height: 12),
+          _buildFab(LucideIcons.shieldCheck),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFab(IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: const BoxDecoration(color: Colors.yellow, shape: BoxShape.circle),
+      child: Icon(icon, color: Colors.black),
     );
   }
 }
