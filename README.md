@@ -1,10 +1,15 @@
-# 🚖 Taxi
+# 🚕 Urban Taxi
 
-**Reliable. Professional. Real-time.**
+**Fast. Secure. Bold.**
 
-Taxi is a high-fidelity ride-hailing showcase built with Flutter. It features a modern map-centric interface, precise fare estimation, and a premium user experience designed for professional urban transportation services.
+Urban Taxi is a premium ride-hailing application built with Flutter. It features a high-contrast Black & Yellow theme, real-time map integration, and a seamless ride-selection experience optimized for efficiency and visual impact.
 
-![Taxi Header](https://raw.githubusercontent.com/Adonias-hibeste/Flutter-Taxi-App/main/preview.png)
+## 📸 Screenshots
+
+<p align="center">
+  <img src="screenshots/selection.png" width="45%" alt="Ride Selection" />
+  <img src="screenshots/summary.png" width="45%" alt="Trip Summary" />
+</p>
 
 ## ✨ Features
 
